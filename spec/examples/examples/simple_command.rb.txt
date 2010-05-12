@@ -1,0 +1,28 @@
+command :init do |c|
+  c.workflow :all
+  c.help %Q{create a new repository in the given directory
+
+    Initialize a new repository in the given directory. If the given directory does not exist, it will be created.
+
+    If no directory is given, the current directory is used.
+
+    It is possible to specify an "ssh://" URL as the destination. See 'hg help urls' for more information.
+}
+  c.desc "Initializes a new repository in the current directory."
+  c.opt :type, "Which type of repository (git, hg)", :short => '-t', :type => :string, :default => 'hg'
+  
+  c.on_run do |options, args|
+    path = args.first ? args.first : '.'
+    
+    case options[:type]
+    when 'hg'
+      Amp::Repositories::Mercurial::LocalRepository.new(path, true, options[:global_config])
+    when 'git'
+      Amp::Repositories::Git::LocalRepository.new(path, true, options[:global_config])
+    else
+      raise "Unknown repository type #{options[:type].inspect}"
+    end
+    
+    puts "New #{options[:type]} repository initialized."
+  end
+end

@@ -1,0 +1,5 @@
+LICENSE 665ec4d7a681c6d942fe132844434b5f81e34999
+README.rdoc e8e816eaee11fbfd5dbe5170541a2fbe9b35bb5c
+lib/yard-amp.rb f2d20f66f531520be5409d7f94aacd4bdd91c619
+lib/yard-amp/modern_handler.rb 9469c52c02117165008f813690449bb4833ac178
+spec/examples/examples/simple_command.rb.txt 069ec92690ebdb1d263cf050951c1107dae4c316

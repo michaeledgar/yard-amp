@@ -6,10 +6,12 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "yard-amp"
     gem.summary = %Q{Automatically create YARD documentation for Amp commands.}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{yard-amp is a YARD plugin that enables the automatic creation of YARD } +
+                      %Q{documentation from amp command declarations.}
     gem.email = "michael.j.edgar@dartmouth.edu"
     gem.homepage = "http://github.com/michaeledgar/yard-amp"
     gem.authors = ["Michael Edgar"]
+    gem.add_dependency "yard", ">= 0.4.0"
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -34,12 +36,11 @@ task :spec => :check_dependencies
 
 task :default => :spec
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "yard-amp #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+  task :yardoc do
+    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
+  end
 end
