@@ -1,13 +1,6 @@
 command :init do |c|
   c.workflow :all
-  c.help %Q{create a new repository in the given directory
-
-    Initialize a new repository in the given directory. If the given directory does not exist, it will be created.
-
-    If no directory is given, the current directory is used.
-
-    It is possible to specify an "ssh://" URL as the destination. See 'hg help urls' for more information.
-}
+  c.help %Q{Help info for init}
   c.desc "Initializes a new repository in the current directory."
   c.opt :type, "Which type of repository (git, hg)", :short => '-t', :type => :string, :default => 'hg'
   
