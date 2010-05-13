@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/yard-amp.rb",
      "lib/yard-amp/modern_handler.rb",
+     "lib/yard-amp/option.rb",
      "lib/yard-amp/parsing_helpers.rb",
      "spec/examples/example_helper.rb",
      "spec/examples/examples/simple_command.rb.txt",

@@ -3,7 +3,7 @@
     <ul class="summary">
       <% @amp_options.each do |option| %>
         <li class="public">
-          <span class="summary_signature"><%= "--#{option.anme}" %><%= ", #{option.options['short']}" if option.options['short'] %></span>
+          <span class="summary_signature"><%= "--#{option.name}" %><%= ", #{option.options['short']}" if option.options['short'] %></span>
           <span class="summary_desc">
             <div class="inline">
               <p><%= option.description %></p>

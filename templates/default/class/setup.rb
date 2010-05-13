@@ -8,7 +8,7 @@ def amp_options
     @amp_options = [] 
   else
     @amp_options = object[:amp_data][:options].sort do |x, y|
-      x[:name] <=> y[:name]
+      x.name <=> y.name
     end
   end
   erb(:amp_options)
