@@ -21,6 +21,7 @@ module YARD::Amp
         o.superclass.type = :class if o.superclass.is_a?(Proxy)
       end
       klass[:amp_data] ||= {}
+      klass[:amp_data].merge!(:docstring => statement.comments)
 
       parse_block statement[2].children[1], owner: klass
     end
@@ -43,6 +44,9 @@ module YARD::Amp
       owner[:amp_data].merge!(meta)
     end
     
+    def construct_docstring(klass)
+      klass.docstring = "== #{klass[:amp_data][:desc]}\n\n#{klass[:amp_data][:help]}\n#{klass[:amp_data][:docstring]}"
+    end
   end
   
   class ModernHelpHandler < ModernAmpCommandHandler
@@ -51,7 +55,8 @@ module YARD::Amp
     def process
       return unless super
       params = statement.parameters
-      attach_metadata(help: params.first.source)
+      attach_metadata(help: clean_string(params.first.source))
+      construct_docstring(owner)
     end
   end
   
@@ -61,7 +66,8 @@ module YARD::Amp
     def process
       return unless super
       params = statement.parameters
-      attach_metadata.merge!(desc: params.first.source)
+      attach_metadata.merge!(desc: clean_string(params.first.source))
+      construct_docstring(owner)
     end
   end
   

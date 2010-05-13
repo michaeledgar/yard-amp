@@ -7,6 +7,8 @@ module YARD::Amp
         str[1..-1]
       elsif str[0,1] =~ /['"]/ && str[-1,1] == str[0,1]
         str[1..-2]
+      elsif str[0,3] =~ /%q{/i && str[-1,1] == "}"
+        str[3..-2]
       else
         str
       end

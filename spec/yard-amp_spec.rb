@@ -22,12 +22,16 @@ describe ::YARD::Amp::ModernCommandHandler do
   
   it "extracts help information and attaches it as metadata" do
     @init_cmd[:amp_data].should have_key(:help)
-    @init_cmd[:amp_data][:help].should == "%Q{Help info for init}"
+    @init_cmd[:amp_data][:help].should == "Help info for init"
   end
   
   it "extracts description information and attaches it as metadata" do
     @init_cmd[:amp_data].should have_key(:desc)
-    @init_cmd[:amp_data][:desc].should == %Q{"Initializes a new repository in the current directory."}
+    @init_cmd[:amp_data][:desc].should == "Initializes a new repository in the current directory."
+  end
+  
+  it "retains the docstring attached to the call to #command" do
+    @init_cmd.docstring.tags(:example).size.should == 2
   end
   
   it "ignores help or description calls not in a command" do
@@ -36,6 +40,10 @@ describe ::YARD::Amp::ModernCommandHandler do
   
   it "parses brace syntax as well as do...end syntax" do
     @braced_cmd.should_not be_nil
+  end
+  
+  it "constructs a reasonable docstring" do
+    @init_cmd.docstring.should == "== Initializes a new repository in the current directory.\n\nHelp info for init"
   end
   
   it "processes all the command-line options" do

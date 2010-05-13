@@ -1,3 +1,9 @@
+##
+# @example
+#    amp init --type=git
+#
+# @example
+#    amp init --source=http://bitbucket.org/carbonica/amp/
 command :init do |c|
   c.workflow :all
   c.help %Q{Help info for init}

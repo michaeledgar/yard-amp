@@ -13,6 +13,10 @@ describe ::YARD::Amp::ParsingHelpers, '#clean_string' do
   it "cleans normal strings" do
     clean_string("\"a big long string\"").should == "a big long string"
   end
+  
+  it "cleans special-quoted strings" do
+    clean_string("%Q{some big long string}").should == "some big long string"
+  end
 end
 
 describe ::YARD::Amp::ParsingHelpers, '#parse_hash' do

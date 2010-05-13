@@ -32,11 +32,14 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/yard-amp.rb",
      "lib/yard-amp/modern_handler.rb",
+     "lib/yard-amp/parsing_helpers.rb",
      "spec/examples/example_helper.rb",
      "spec/examples/examples/simple_command.rb.txt",
+     "spec/parsing_helpers_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
-     "spec/yard-amp_spec.rb"
+     "spec/yard-amp_spec.rb",
+     "yard-amp.gemspec"
   ]
   s.homepage = %q{http://github.com/michaeledgar/yard-amp}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -45,6 +48,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Automatically create YARD documentation for Amp commands.}
   s.test_files = [
     "spec/examples/example_helper.rb",
+     "spec/parsing_helpers_spec.rb",
      "spec/spec_helper.rb",
      "spec/yard-amp_spec.rb"
   ]

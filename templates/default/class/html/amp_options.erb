@@ -1,0 +1,9 @@
+<% if option_listing.size > 0 %>
+  <h2>Command-line Options</h2>
+    <dl class="constants">
+      <% option_listing.each do |option| %>
+        <dt class="<%= option[:deprecated] ? 'deprecated' : '' %>"><%= option[:name] %></dt>
+        <dd><%= option[:description] %></dd>
+      <% end %>
+    </dl>
+<% end %>
