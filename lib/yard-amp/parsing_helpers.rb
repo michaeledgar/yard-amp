@@ -9,6 +9,16 @@ module YARD::Amp
         str[1..-2]
       elsif str[0,3] =~ /%q{/i && str[-1,1] == "}"
         str[3..-2]
+      elsif str[0,3] == "<<-"
+        prefix = str[3..-1] =~ /[\S]+/
+        if prefix
+          prefix = $&
+          # check if it starts and ends with it
+          if str[-1 * prefix.size..-1] == str[3...prefix.size+3]
+            return str[3 + prefix.size..(-1 * prefix.size - 2)]
+          end
+        end
+        str
       else
         str
       end

@@ -17,6 +17,10 @@ describe ::YARD::Amp::ParsingHelpers, '#clean_string' do
   it "cleans special-quoted strings" do
     clean_string("%Q{some big long string}").should == "some big long string"
   end
+  
+  it "cleans heredocs" do
+    clean_string("<<-EOF\nsome string\n another lines\n  another line\nEOF").should == "\nsome string\n another lines\n  another line"
+  end
 end
 
 describe ::YARD::Amp::ParsingHelpers, '#parse_hash' do

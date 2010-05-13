@@ -10,6 +10,7 @@ command :init do |c|
   c.desc "Initializes a new repository in the current directory."
   c.opt :type, "Which type of repository (git, hg)", :short => '-t', :type => :string, :default => 'hg'
   c.opt :source, "Where the source repository could be found", :short => '-s', :multi => true
+  c.opt :"no-opts", "This has no extra configuration things" if x && y
 
   c.on_run do |options, args|
     path = args.first ? args.first : '.'

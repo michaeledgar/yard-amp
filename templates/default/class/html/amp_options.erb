@@ -2,12 +2,11 @@
   <h2>Command-line Options</h2>
     <ul class="summary">
       <% @amp_options.each do |option| %>
-        <% option[:options] ||= {} %>
         <li class="public">
-          <span class="summary_signature"><%= option[:name] + " #{option[:options]['short']}" %></span>
+          <span class="summary_signature"><%= "--#{option.anme}" %><%= ", #{option.options['short']}" if option.options['short'] %></span>
           <span class="summary_desc">
             <div class="inline">
-              <p><%= option[:description] %></p>
+              <p><%= option.description %></p>
             </div>
           </span>
         </li>

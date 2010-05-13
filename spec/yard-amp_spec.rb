@@ -48,13 +48,13 @@ describe ::YARD::Amp::ModernCommandHandler do
   
   it "processes all the command-line options" do
     @init_cmd[:amp_data].should have_key(:options)
-    @init_cmd[:amp_data][:options].size.should == 2
+    @init_cmd[:amp_data][:options].size.should == 3
   end
   
   it "extracts the names of command-line options" do
     found_opts = @init_cmd[:amp_data][:options]
-    ["type", "source"].each do |expected_opt|
-      opt = found_opts.find {|x| x[:name] == expected_opt}
+    ["type", "source", "no-opts"].each do |expected_opt|
+      opt = found_opts.find {|x| x.name == expected_opt}
       fail "Option '#{expected_opt}' not found on the Init command." unless opt
     end
   end
@@ -63,15 +63,16 @@ describe ::YARD::Amp::ModernCommandHandler do
     found_opts = @init_cmd[:amp_data][:options]
     expected_descriptions = ["Which type of repository (git, hg)", "Where the source repository could be found"]
     expected_descriptions.each do |expected_desc|
-      opt = found_opts.find {|x| x[:description] == expected_desc}
+      opt = found_opts.find {|x| x.description == expected_desc}
       fail "Option with description '#{expected_desc}' not found on the Init command." unless opt
     end
   end
   
   it "extracts the additional options associated with individual command-line options" do
     found_opts = @init_cmd[:amp_data][:options]
-    type_opt = found_opts.find {|x| x[:name] == "type"}
-    source_opt = found_opts.find {|x| x[:name] == "source"}
+    type_opt = found_opts.find {|x| x.name == "type"}
+    source_opt = found_opts.find {|x| x.name == "source"}
+    none_opt = found_opts.find {|x| x.name == "no-opts"}
 
     type_opt.should_not be_nil
     source_opt.should_not be_nil
@@ -84,5 +85,7 @@ describe ::YARD::Amp::ModernCommandHandler do
     
     source_opt[:options]["short"].should == "-s"
     source_opt[:options]["multi"].should == "true"
+    
+    none_opt[:options].should be_empty
   end
 end
