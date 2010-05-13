@@ -1,8 +1,9 @@
 module YARD::Amp
-  class Option < Struct.new(:name, :description, :options)
-    def initialize(*args)
+  class OptionObject < YARD::CodeObjects::Base
+    attr_accessor :description, :options
+    def initialize(namespace, name, description, opts = {}, *args)
       super
-      self.options ||= {}
+      self.description, self.options = description, opts
     end
   end
 end

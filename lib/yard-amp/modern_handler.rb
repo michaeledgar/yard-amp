@@ -103,9 +103,9 @@ module YARD::Amp
     end
     
     def parse_parameters(params)
-      option = Option.new
-      option.name = clean_string(params.first.source)
-      option.description = clean_string(params[1].source)
+      name = clean_string(params.first.source)
+      description = clean_string(params[1].source)
+      option = OptionObject.new(owner, name, description)
       if params[2]
         option.options = parse_hash(params[2])
       end

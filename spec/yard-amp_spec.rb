@@ -54,7 +54,7 @@ describe ::YARD::Amp::ModernCommandHandler do
   it "extracts the names of command-line options" do
     found_opts = @init_cmd[:amp_data][:options]
     ["type", "source", "no-opts"].each do |expected_opt|
-      opt = found_opts.find {|x| x.name == expected_opt}
+      opt = found_opts.find {|x| x.name.to_s == expected_opt}
       fail "Option '#{expected_opt}' not found on the Init command." unless opt
     end
   end
@@ -70,9 +70,9 @@ describe ::YARD::Amp::ModernCommandHandler do
   
   it "extracts the additional options associated with individual command-line options" do
     found_opts = @init_cmd[:amp_data][:options]
-    type_opt = found_opts.find {|x| x.name == "type"}
-    source_opt = found_opts.find {|x| x.name == "source"}
-    none_opt = found_opts.find {|x| x.name == "no-opts"}
+    type_opt = found_opts.find {|x| x.name == :type}
+    source_opt = found_opts.find {|x| x.name == :source}
+    none_opt = found_opts.find {|x| x.name == :"no-opts"}
 
     type_opt.should_not be_nil
     source_opt.should_not be_nil
