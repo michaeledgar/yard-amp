@@ -5,6 +5,7 @@ describe ::YARD::Amp::ModernCommandHandler do
   before(:all) do
     parse_file :simple_command
     @init_cmd = Registry.at("Amp::Commands::Init")
+    @braced_cmd = Registry.at("Amp::Commands::Braced")
   end
   
   it "creates commands when parsing a command declaration" do
@@ -28,5 +29,36 @@ describe ::YARD::Amp::ModernCommandHandler do
     @init_cmd[:amp_data].should have_key(:desc)
     @init_cmd[:amp_data][:desc].should == %Q{"Initializes a new repository in the current directory."}
   end
+  
+  it "ignores help or description calls not in a command" do
+    Registry.at("NotACommand")[:amp_data].should be_nil
+  end
+  
+  it "parses brace syntax as well as do...end syntax" do
+    @braced_cmd.should_not be_nil
+  end
+  
+  it "processes all the command-line options" do
+    @init_cmd[:amp_data].should have_key(:options)
+    @init_cmd[:amp_data][:options].size.should == 2
+  end
+  
+  it "extracts the names of command-line options" do
+    found_opts = @init_cmd[:amp_data][:options]
+    ["type", "source"].each do |expected_opt|
+      opt = found_opts.find {|x| x[:name] == expected_opt}
+      fail "Option '#{expected_opt}' not found on the Init command." unless opt
+    end
+  end
+  
+  it "extracts the descriptions of command-line options" do
+    found_opts = @init_cmd[:amp_data][:options]
+    expected_descriptions = ["Which type of repository (git, hg)", "Where the source repository could be found"]
+    expected_descriptions.each do |expected_desc|
+      opt = found_opts.find {|x| x[:description] == expected_desc}
+      fail "Option with description '#{expected_desc}' not found on the Init command." unless opt
+    end
+  end
+  
   
 end

@@ -22,44 +22,68 @@ module YARD::Amp
       end
       klass[:amp_data] ||= {}
 
-      parse_block statement[2], owner: klass
+      parse_block statement[2].children[1], owner: klass
     end
     
     def commands_module
       mod = register ModuleObject.new(:root, "Amp")
       com_mod = register ModuleObject.new(mod, "Commands")
     end
+  end
+  
+  class ModernAmpCommandHandler < YARD::Handlers::Ruby::Base
+    include ParsingHelpers
+    def process
+      return nil unless owner.inheritance_tree(false).include?(P("Amp::Command"))
+      owner[:amp_data] ||= {}
+      true
+    end
     
-    def parse_block(inner_node, opts = {})
-      push_state(opts) do
-        nodes = case inner_node.type
-                when :list then inner_node.children
-                when :do_block then inner_node.children[1]
-                else [inner_node]
-                end
-        parser.process(nodes)
+    def attach_metadata(meta = {})
+      owner[:amp_data].merge!(meta)
+    end
+    
+  end
+  
+  class ModernHelpHandler < ModernAmpCommandHandler
+    handles method_call(:help), method_call(:help=)
+    
+    def process
+      return unless super
+      params = statement.parameters
+      attach_metadata(help: params.first.source)
+    end
+  end
+  
+  class ModernDescriptionHandler < ModernAmpCommandHandler
+    handles method_call(:desc), method_call(:desc=)
+    
+    def process
+      return unless super
+      params = statement.parameters
+      attach_metadata.merge!(desc: params.first.source)
+    end
+  end
+  
+  class ModernOptionHandler < ModernAmpCommandHandler
+    handles method_call(:opt), method_call(:add_opt)
+    
+    def process
+      return unless super
+      params = statement.parameters
+      option = parse_parameters(params)
+      owner[:amp_data][:options] ||= []
+      owner[:amp_data][:options] << option
+    end
+    
+    def parse_parameters(params)
+      option = {}
+      option[:name] = clean_string(params.first.source)
+      option[:description] = clean_string(params[1].source)
+      if params[2]
+        option[:options] = parse_hash(params[2])
       end
-    end
-  end
-  
-  class ModernHelpHandler < YARD::Handlers::Ruby::Base
-    handles method_call(:help)
-    include YARD::CodeObjects
-    
-    def process
-      return unless owner.inheritance_tree(false).include?(P("Amp::Command"))
-      params = statement.parameters
-      owner[:amp_data].merge!(help: params.first.source)
-    end
-  end
-  
-  class ModernDescriptionHandler < YARD::Handlers::Ruby::Base
-    handles method_call(:desc)
-    include YARD::CodeObjects
-    
-    def process
-      params = statement.parameters
-      owner[:amp_data].merge!(desc: params.first.source)
+      option
     end
   end
 end
