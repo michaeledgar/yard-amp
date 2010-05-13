@@ -1,10 +1,16 @@
-<% p "HAIHAIHAI" %>
-<% if option_listing.size > 0 %>
+<% if @amp_options.size > 0 %>
   <h2>Command-line Options</h2>
-    <dl class="constants">
-      <% option_listing.each do |option| %>
-        <dt class="<%= option[:deprecated] ? 'deprecated' : '' %>"><%= option[:name] %></dt>
-        <dd><%= option[:description] %></dd>
+    <ul class="summary">
+      <% @amp_options.each do |option| %>
+        <% option[:options] ||= {} %>
+        <li class="public">
+          <span class="summary_signature"><%= option[:name] + " #{option[:options]['short']}" %></span>
+          <span class="summary_desc">
+            <div class="inline">
+              <p><%= option[:description] %></p>
+            </div>
+          </span>
+        </li>
       <% end %>
-    </dl>
+    </ul>
 <% end %>
