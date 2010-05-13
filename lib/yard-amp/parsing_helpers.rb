@@ -5,7 +5,7 @@ module YARD::Amp
         str[2..-2]
       elsif str[0,1] == ":"
         str[1..-1]
-      elsif str[0,1] == "\"" && str[-1,1] == "\""
+      elsif str[0,1] =~ /['"]/ && str[-1,1] == str[0,1]
         str[1..-2]
       else
         str

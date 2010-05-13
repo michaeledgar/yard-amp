@@ -60,5 +60,21 @@ describe ::YARD::Amp::ModernCommandHandler do
     end
   end
   
-  
+  it "extracts the additional options associated with individual command-line options" do
+    found_opts = @init_cmd[:amp_data][:options]
+    type_opt = found_opts.find {|x| x[:name] == "type"}
+    source_opt = found_opts.find {|x| x[:name] == "source"}
+
+    type_opt.should_not be_nil
+    source_opt.should_not be_nil
+    type_opt[:options].should_not be_nil
+    source_opt[:options].should_not be_nil
+
+    type_opt[:options]["short"].should == "-t"
+    type_opt[:options]["type"].should == "string"
+    type_opt[:options]["default"].should == "hg"
+    
+    source_opt[:options]["short"].should == "-s"
+    source_opt[:options]["multi"].should == "true"
+  end
 end
