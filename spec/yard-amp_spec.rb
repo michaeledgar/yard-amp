@@ -4,7 +4,7 @@ describe ::YARD::Amp::ModernCommandHandler do
   include Helpers::Examples
   before(:all) do
     parse_file :simple_command
-    @init_cmd = Registry.at("Amp::Commands::Init")
+    @init_cmd = Registry.at("Amp::Commands::All::Init")
     @braced_cmd = Registry.at("Amp::Commands::Braced")
   end
   

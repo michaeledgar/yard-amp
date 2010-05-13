@@ -24,6 +24,10 @@ module YARD::Amp
       end
     end
     
+    def construct_docstring(klass)
+      klass.docstring = "== #{klass[:amp_data][:desc]}\n\n#{klass[:amp_data][:help]}\n#{klass[:amp_data][:docstring]}"
+    end
+    
     def parse_hash(node)
       node.children.inject({}) do |hash, pair|
         unless pair.type == :assoc

@@ -8,6 +8,7 @@ module YARD::Amp
   class ModernCommandHandler < YARD::Handlers::Ruby::Base
     handles method_call(:command)
     include YARD::CodeObjects
+    include ParsingHelpers
     
     def process
       if statement.parameters.size != 2
@@ -16,7 +17,7 @@ module YARD::Amp
       command_name = statement.parameters.first.source
       command_name = command_name[1..-1] if command_name[0,1] == ":"
       
-      klass = register ClassObject.new(commands_module, command_name.capitalize) do |o|
+      klass = ClassObject.new(commands_module, command_name.capitalize) do |o|
         o.superclass = P("Amp::Command")
         o.superclass.type = :class if o.superclass.is_a?(Proxy)
       end
@@ -24,6 +25,20 @@ module YARD::Amp
       klass[:amp_data].merge!(:docstring => statement.comments)
 
       parse_block statement[2].children[1], owner: klass
+      if klass[:amp_data][:workflow]
+        old_meta = klass[:amp_data]
+        klass = ClassObject.new(workflow_module(klass[:amp_data][:workflow]), command_name.capitalize) do |o|
+          o.superclass = P("Amp::Command")
+          o.superclass.type = :class if o.superclass.is_a?(Proxy)
+        end
+        klass[:amp_data] = old_meta
+      end
+      register klass
+      construct_docstring(klass)
+    end
+    
+    def workflow_module(workflow)
+      register ModuleObject.new(commands_module, workflow.to_s.capitalize)
     end
     
     def commands_module
@@ -44,9 +59,6 @@ module YARD::Amp
       owner[:amp_data].merge!(meta)
     end
     
-    def construct_docstring(klass)
-      klass.docstring = "== #{klass[:amp_data][:desc]}\n\n#{klass[:amp_data][:help]}\n#{klass[:amp_data][:docstring]}"
-    end
   end
   
   class ModernHelpHandler < ModernAmpCommandHandler
@@ -56,7 +68,6 @@ module YARD::Amp
       return unless super
       params = statement.parameters
       attach_metadata(help: clean_string(params.first.source))
-      construct_docstring(owner)
     end
   end
   
@@ -67,7 +78,16 @@ module YARD::Amp
       return unless super
       params = statement.parameters
       attach_metadata.merge!(desc: clean_string(params.first.source))
-      construct_docstring(owner)
+    end
+  end
+  
+  class ModernWorkflowHandler < ModernAmpCommandHandler
+    handles method_call(:workflow), method_call(:workflow=)
+    
+    def process
+      return unless super
+      params = statement.parameters
+      attach_metadata.merge!(workflow: clean_string(params.first.source))
     end
   end
   
