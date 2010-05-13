@@ -1,3 +1,5 @@
+include T('default/class')
+
 def init
   super
   sections.last.place(:amp_options).before(:constant_summary)

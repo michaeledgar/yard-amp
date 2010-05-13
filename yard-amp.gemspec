@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{yard-amp}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Edgar"]
-  s.date = %q{2010-05-12}
+  s.date = %q{2010-05-13}
   s.description = %q{yard-amp is a YARD plugin that enables the automatic creation of YARD documentation from amp command declarations.}
   s.email = %q{michael.j.edgar@dartmouth.edu}
   s.extra_rdoc_files = [
@@ -39,6 +39,9 @@ Gem::Specification.new do |s|
      "spec/spec.opts",
      "spec/spec_helper.rb",
      "spec/yard-amp_spec.rb",
+     "templates/default/class/html/amp_options.erb",
+     "templates/default/class/setup.rb",
+     "templates/default/class/text/amp_options.erb",
      "yard-amp.gemspec"
   ]
   s.homepage = %q{http://github.com/michaeledgar/yard-amp}
