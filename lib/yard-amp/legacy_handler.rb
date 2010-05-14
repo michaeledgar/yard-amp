@@ -38,7 +38,7 @@ module YARD::Amp
     end
   end
   # 
-  class ModernAmpCommandHandler < YARD::Handlers::Ruby::Legacy::Base
+  class LegacyAmpCommandHandler < YARD::Handlers::Ruby::Legacy::Base
     include ParsingHelpers
     def process
       return nil unless owner.inheritance_tree(false).include?(P("Amp::Command"))
@@ -52,7 +52,7 @@ module YARD::Amp
     
   end
   # 
-  class ModernHelpHandler < ModernAmpCommandHandler
+  class LegacyHelpHandler < LegacyAmpCommandHandler
     MATCH = /help=?\(?\s*(.*)\s*\)?\s*/
     handles MATCH
     
@@ -63,7 +63,7 @@ module YARD::Amp
     end
   end
   # 
-  class ModernDescriptionHandler < ModernAmpCommandHandler
+  class LegacyDescriptionHandler < LegacyAmpCommandHandler
     MATCH = /desc=?\(?\s*(.*)\s*\)?\s*/
     handles MATCH
     
@@ -75,36 +75,42 @@ module YARD::Amp
     end
   end
   # 
-  class ModernWorkflowHandler < ModernAmpCommandHandler
+  class LegacyWorkflowHandler < LegacyAmpCommandHandler
     MATCH = /workflow=?\(?\s*(.*)\s*\)?\s*/
     handles MATCH
     
     def process
       return unless super
-      params = statement.tokens.to_s[MATCH, 1].split(",").map {|x| clean_string(x)}
-      attach_metadata.merge!(:workflow => params.first)
+      param = clean_string(statement.tokens.to_s[MATCH, 1].strip)
+      attach_metadata.merge!(:workflow => param)
     end
   end
   # 
-  # class ModernOptionHandler < ModernAmpCommandHandler
-  #   handles method_call(:opt), method_call(:add_opt)
-  #   
-  #   def process
-  #     return unless super
-  #     params = statement.parameters
-  #     option = parse_parameters(params)
-  #     owner[:amp_data][:options] ||= []
-  #     owner[:amp_data][:options] << option
-  #   end
-  #   
-  #   def parse_parameters(params)
-  #     name = clean_string(params.first.source)
-  #     description = clean_string(params[1].source)
-  #     option = OptionObject.new(owner, name, description)
-  #     if params[2]
-  #       option.options = parse_hash(params[2])
-  #     end
-  #     option
-  #   end
-  # end
+  class LegacyOptionHandler < LegacyAmpCommandHandler
+    MATCH = /(opt|add_opt)\(?\s*(.*)\s*\)?\s*/
+    handles MATCH
+    
+    def process
+      return unless super
+      params = split_by_comma_smart(statement.tokens.to_s[MATCH, 2]).map {|x| clean_string(x.strip)}
+      option = parse_parameters(params)
+      owner[:amp_data][:options] ||= []
+      owner[:amp_data][:options] << option
+    end
+    
+    def parse_parameters(params)
+      name = clean_string(params.first)
+      description = clean_string(params[1])
+      option = OptionObject.new(owner, name, description)
+      if params[2..-1]
+        reg = /(.*?)\s*=>\s*([^,]*)/
+        params[2..-1].each do |param|
+          if param =~ reg
+            option.options[clean_string($1)] = clean_string $2
+          end
+        end
+      end
+      option
+    end
+  end
 end

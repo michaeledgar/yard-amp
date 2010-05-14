@@ -23,6 +23,17 @@ describe ::YARD::Amp::ParsingHelpers, '#clean_string' do
   end
 end
 
+describe ::YARD::Amp::ParsingHelpers, '#split_by_comma_smart' do
+  include YARD::Amp::ParsingHelpers
+  it "splits simple strings" do
+    split_by_comma_smart(":hello, :world, :im_mike").should == [":hello", " :world", " :im_mike"]
+  end
+  
+  it "splits slightly tougher strings" do
+    split_by_comma_smart(":hello, \"a big long, string\", :is_nice").should == [":hello", " \"a big long, string\"", " :is_nice"]
+  end
+end
+
 if RUBY19
   describe ::YARD::Amp::ParsingHelpers, '#parse_hash' do
     include YARD::Amp::ParsingHelpers

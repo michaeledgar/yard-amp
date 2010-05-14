@@ -40,5 +40,23 @@ module YARD::Amp
       end
     end
     
+    def split_by_comma_smart(string)
+      result = []
+      in_quote = false
+      last_spot = 0
+      string.split(//).each_with_index do |char, idx|
+        if char =~ /['"]/
+          in_quote = !in_quote
+        elsif char == "," && !in_quote
+          result << string[last_spot..(idx - 1)]
+          last_spot = idx + 1
+        end
+      end
+      unless last_spot == string.size - 1
+        result << string[last_spot..-1]
+      end
+      result
+    end
+    
   end
 end
