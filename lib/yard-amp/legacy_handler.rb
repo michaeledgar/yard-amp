@@ -110,6 +110,7 @@ module YARD::Amp
           end
         end
       end
+      option.docstring = statement.comments
       option
     end
   end

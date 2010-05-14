@@ -87,6 +87,19 @@ describe "::YARD::Amp::#{}ModernCommandHandler" do
     source_opt[:options]["multi"].should == "true"
     
     none_opt[:options].should == {"type" => "flag"}
-
+  end
+  
+  it "attaches comments to parsed options" do
+    found_opts = @init_cmd[:amp_data][:options]
+    type_opt = found_opts.find {|x| x.name == :type}
+    
+    type_opt.docstring.should == "This option is used for the multi-repo-ness of amp"
+  end
+  
+  it "attaches tags to parsed options" do
+    found_opts = @init_cmd[:amp_data][:options]
+    source_opt = found_opts.find {|x| x.name == :source}
+    
+    source_opt.docstring.tags(:example).should_not be_empty
   end
 end

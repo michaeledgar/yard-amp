@@ -101,6 +101,7 @@ module YARD::Amp
       if params[2]
         option.options = parse_hash(params[2])
       end
+      option.docstring = statement.comments
       option
     end
   end
