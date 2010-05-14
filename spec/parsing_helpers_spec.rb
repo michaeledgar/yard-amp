@@ -23,15 +23,17 @@ describe ::YARD::Amp::ParsingHelpers, '#clean_string' do
   end
 end
 
-describe ::YARD::Amp::ParsingHelpers, '#parse_hash' do
-  include YARD::Amp::ParsingHelpers
-  it "parses hashes into hash objects" do
-    ast = YARD::Parser::SourceParser.parse_string("{\"hello\" => \"world\"}").ast.first
-    parse_hash(ast).should == {"hello" => "world"}
-  end
+if RUBY19
+  describe ::YARD::Amp::ParsingHelpers, '#parse_hash' do
+    include YARD::Amp::ParsingHelpers
+    it "parses hashes into hash objects" do
+      ast = YARD::Parser::SourceParser.parse_string("{\"hello\" => \"world\"}").ast.first
+      parse_hash(ast).should == {"hello" => "world"}
+    end
   
-  it "parses hashes with symbols into string-based hashes" do
-    ast = YARD::Parser::SourceParser.parse_string("{:\"no-color\" => true}").ast.first
-    parse_hash(ast).should == {"no-color" => "true"}
+    it "parses hashes with symbols into string-based hashes" do
+      ast = YARD::Parser::SourceParser.parse_string("{:\"no-color\" => true}").ast.first
+      parse_hash(ast).should == {"no-color" => "true"}
+    end
   end
 end

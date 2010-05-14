@@ -25,14 +25,6 @@ module YARD::Amp
       klass[:amp_data].merge!(:docstring => statement.comments)
 
       parse_block statement[2].children[1], owner: klass
-      if klass[:amp_data][:workflow]
-        old_meta = klass[:amp_data]
-        klass = ClassObject.new(workflow_module(klass[:amp_data][:workflow]), command_name.capitalize) do |o|
-          o.superclass = P("Amp::Command")
-          o.superclass.type = :class if o.superclass.is_a?(Proxy)
-        end
-        klass[:amp_data] = old_meta
-      end
       register klass
       construct_docstring(klass)
     end

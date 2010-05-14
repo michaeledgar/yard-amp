@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe ::YARD::Amp::ModernCommandHandler do
+describe "::YARD::Amp::#{}ModernCommandHandler" do
   include Helpers::Examples
   before(:all) do
     parse_file :simple_command
-    @init_cmd = Registry.at("Amp::Commands::All::Init")
+    @init_cmd = Registry.at("Amp::Commands::Init")
     @braced_cmd = Registry.at("Amp::Commands::Braced")
   end
   
@@ -31,7 +31,7 @@ describe ::YARD::Amp::ModernCommandHandler do
   end
   
   it "retains the docstring attached to the call to #command" do
-    @init_cmd.docstring.tags(:example).size.should == 2
+    @init_cmd.docstring.tags(:example).size.should_not == 0
   end
   
   it "ignores help or description calls not in a command" do
@@ -86,6 +86,7 @@ describe ::YARD::Amp::ModernCommandHandler do
     source_opt[:options]["short"].should == "-s"
     source_opt[:options]["multi"].should == "true"
     
-    none_opt[:options].should be_empty
+    none_opt[:options].should == {"type" => "flag"}
+
   end
 end
